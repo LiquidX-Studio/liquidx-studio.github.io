@@ -1,13 +1,14 @@
 ![LiquidXLogo.png](./img/LiquidXLogoDarkBg.png)
 
 ---
+> Author: [Nobel Khandaker](https://www.linkedin.com/in/nobelkhandaker)
 
 # How we code
 Designing and developing a software (SAAS or client software) is a complex process that are often impacted by a variety of constraints.  Short time to market, shortage of engineering resources, complexity of the product requirements are often the common factors impacting any software development project. We use the described process to address the common challenges and deliver products that meets the quality bar required by our stakeholders.
 
 # How should you use this engineering handbook?
 The process described here is largely driven by our [Engineering excellence strategy](./engineering_excellence_strategy.html).
-All engineers at LiquidX studio are *required* to follow the instructions included in this handbook.  __Any__ deviation from this engineering process requires *prior* approval from the head of engineering.
+All engineers at LiquidX studio are *mandated* to follow the instructions included in this handbook.  __Any__ deviation from this engineering process requires *prior* approval from the head of engineering.
 
 # 0. Before you code
 Before the coding starts for a new product or feature, do the following:
@@ -16,7 +17,7 @@ Before the coding starts for a new product or feature, do the following:
 3. Create tracking work item on the task board
 
 
-# 1. Single source of truth
+# 1. Single source of truth (SSOT)
 We follow the Trunk-Based development model for version control and have a single source of truth for all software components and modules.  
 ![img](./img/trunkBasedDevelopment.jpeg)
 
@@ -28,13 +29,12 @@ We follow the Trunk-Based development model for version control and have a singl
     - Major version is incremented for *new* features or breaking changes
     - Minor version number is incremented for *feature updates* or *bug fixes*
     - Patch version numbers are incremented *only* for hotfix/patch
-- After QA verification, the release branch is deployed into the production
+- After QA testing, the release branch is deployed into the production
     - Release branches are long-lived.  They can be used later to revert a change in the production branch, or to test a patch before deploying it to production
 
 # 2. Source code
 All changes that are deployed in the production (e.g., aws lambda scripts, SQL queries to create table/schema) are stored in our code repositories on Github:
 - [LiquidX studio](https://github.com/LiquidX-Studio)
-- [Anime Metaverse](https://github.com/anime-metaverse)
 - [Pixelmon](https://github.com/Pixelation-Labs)
 
 ## Code changes
@@ -68,7 +68,7 @@ You are required to follow a standard coding style:
     - Solidity [slither](https://github.com/crytic/slither)
 
 ## Step 3.4: Write unit tests
-If you are writing backend code (e.g., APIs, web services), your code should have unit test coverage of $> 90%$.  For smart contracts, the unit test coverage should be 100%.
+If you are writing backend code (e.g., APIs, web services), your code should have unit test coverage of `>90%`.  For smart contracts, the unit test coverage should be 100%.
 
 Your change should not break the existing unit tests.  Changes with the broken unit tests will be blocked from getting deployed in the production.
 
@@ -78,7 +78,7 @@ Test your feature on your local machine.
 ## Step 3.6: Create Pull requests
 When you have completed static analysis, unit testing, and dev testing (in dev machine or in dev environment), create a pull request on the main branch.
 
-> Never check in code that will break existing features - use feature flighting!
+> Never check in code that will break existing features without a failsafe - use feature flighting!
 
 ## Step 3.7: Code review
 All code checkins require *at least 2* sign-offs from the reviewers before they can be merged to the `main` branch.
@@ -124,7 +124,7 @@ When your pull request is merged to the main, it is *auto-deployed* in the dev e
 
 ## Feature Management and Canary releases
 The risk of deploying new feature or code is minimized by using a [canary release](https://martinfowler.com/bliki/CanaryRelease.html) approach
-- Each change is gated by a feature flag and is initially released to a small subset of users [unleash](https://github.com/Unleash/unleash-client-node)
+- Each change is gated by a feature flag and is initially released to a small subset of users using [Unleash](https://getunleash.io)
 - In case of a regression or major issue, the feature is toggled off and the user experience remains intact
 - The feature is made available to everyone once it has been tested in production
 
@@ -135,8 +135,9 @@ Only in case of a __critical__ or a __major production incident__ ([see our SLA 
 - Our devops team will create a staging branch which will have the *same* version as the production
 - DevOps team will set the _branch policy__ so that all changes require 1) Pull request and 2) Code Reviews, and 3) Unit testing
 - Developers will make changes to the staging branch using a pull request
-- The staging branch is deployed in the staging environment for our QA team to test
-- Once the dev testing *and* QA verification is completed, the change is deployed to the production
+- The staging branch is deployed in the staging environment for our feature owners (engineers) to test
+- Once the QA verification is completed by the feature owners, we arrange dogfood testing sessions where everyone in the team including product managers and business owners to run thorough end-to-end tests
+- After passing the dogfood tests, the change is deployed to the production
 - QA team will verify the change in production to ensure there are no regressions
 - Finally, the hotfix change is integrated in the main branch following the regular code review/testing process
 
